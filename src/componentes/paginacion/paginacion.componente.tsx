@@ -9,12 +9,36 @@ import React from 'react';
  * 
  * @returns un JSX element 
  */
-const Paginacion = () => {
 
-    return <div className="paginacion">
-        <button disabled={true} className={"primary"}>Anterior</button>
-        <button disabled={false} className={"primary"}>Siguiente</button>
-    </div>
+
+interface PaginacionProps {
+    currentPage: number;
+    onPageChange: (page: number) => void;
 }
+
+const Paginacion: React.FC<PaginacionProps> = ({ currentPage, onPageChange }) => {
+
+    const handlePrevClick = () => {
+        if (currentPage > 1) {
+            onPageChange(currentPage - 1);
+        }
+    };
+
+    const handleNextClick = () => {
+        onPageChange(currentPage + 1);
+    };
+
+    return (
+        <div className="paginacion">
+            <button disabled={currentPage === 1} onClick={handlePrevClick} className="primary">
+                Anterior
+            </button>
+            <span>{`Página ${currentPage}`}</span>
+            <button onClick={handleNextClick} className="primary">
+                Siguiente
+            </button>
+        </div>
+    );
+};
 
 export default Paginacion;

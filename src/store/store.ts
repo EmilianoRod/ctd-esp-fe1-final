@@ -20,6 +20,7 @@ const store = configureStore({
             loading: false,
             error: null,
             favorites: [],
+            filtro: ''
         },
     },
 });

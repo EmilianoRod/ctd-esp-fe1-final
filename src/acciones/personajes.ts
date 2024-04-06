@@ -1,6 +1,6 @@
 import { Personaje } from "../componentes/personajes/tarjeta-personaje.componente";
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
-
+import { RootState } from "../store/store"; 
 
 
 // Definir el tipo de la acción asíncrona
@@ -9,10 +9,12 @@ type FetchCharacterPayload = {
 };
 
 
-export const fetchCharacter = createAsyncThunk<FetchCharacterPayload>(
+export const fetchCharacter = createAsyncThunk<FetchCharacterPayload, number>(
     "characters/fetchCharacters",
-    async () => {
-        const response = await fetch("https://rickandmortyapi.com/api/character");
+    async (page : number, {getState}) => {
+        const state = getState() as RootState;
+        const filtro = state.characters.filtro;
+        const response = await fetch(`https://rickandmortyapi.com/api/character?page=${page}&name=${filtro}`);
         const data = await response.json();
         return data.results;
     }

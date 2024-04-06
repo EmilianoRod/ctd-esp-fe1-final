@@ -1,29 +1,31 @@
 import React, { useState } from 'react';
 import './filtros.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { filterCharacters } from '../../reducers/personajesReducer';
+import { RootState } from '../../store/store';
 
 const Filtros = ({ onFilter }: { onFilter: (filtro: string) => void }) => {
 
 
     const dispatch = useDispatch();
-    const [filtro, setFiltro] = useState('');
+    const filtro = useSelector((state: RootState) => state.characters.filtro); // Obtener el filtro del estado global
+
+    // const [filtro, setFiltro] = useState('');
 
     // Función para manejar cambios en el input de filtro
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const textoFiltro = event.target.value;
-        setFiltro(textoFiltro);
         // Disparar la acción de filtro solo si hay texto en el input
-        if (textoFiltro.trim() === '') {
-            onFilter(''); // Restablecer el estado inicial
-        }
+        // if (textoFiltro.trim() === '') {
+        //     onFilter(''); // Restablecer el estado inicial
+        // }
         dispatch(filterCharacters(textoFiltro));
 
     };
 
     // Función para manejar el click en el botón Limpiar filtros
     const handleLimpiarFiltros = () => {
-        setFiltro('');
+        // setFiltro('');
         // Disparar la acción de filtro con texto vacío para restaurar el estado inicial
         dispatch(filterCharacters(''));
     };

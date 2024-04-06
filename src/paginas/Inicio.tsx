@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCharacter } from '../acciones/personajes';
 import Filtros from "../componentes/personajes/filtros.componente";
@@ -7,7 +7,7 @@ import Paginacion from "../componentes/paginacion/paginacion.componente";
 import React from "react";
 import { AppDispatch, RootState } from '../store/store';
 
- 
+
 /**
  * Esta es la pagina principal. Aquí se debera ver el panel de filtros junto con la grilla de personajes.
  * 
@@ -19,17 +19,23 @@ import { AppDispatch, RootState } from '../store/store';
 
 const PaginaInicio = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { data, loading, error } = useSelector((state: RootState) => state.characters); // Tipa state como RootState
+    const { data, loading, error } = useSelector((state: RootState) => state.characters);
+
+    const [currentPage, setCurrentPage] = useState(1);
+
 
     useEffect(() => {
-        dispatch( fetchCharacter() );
-    }, [dispatch]);
+        dispatch( fetchCharacter(currentPage) );
+    }, [dispatch, currentPage]);
 
     const handleFilter = (filtro: string) => {
         // Aquí puedes implementar la lógica para filtrar los personajes en función del texto ingresado
         // Por ejemplo, podrías llamar a una acción de Redux que aplique el filtro
     };
 
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
     return (
         <div className="container">
@@ -38,7 +44,10 @@ const PaginaInicio = () => {
                 <button className="danger">Test Button</button>
             </div>
             <Filtros onFilter={handleFilter}/>
-            <Paginacion />
+            <Paginacion
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+            />
             {loading ? (
                 <p>Cargando...</p>
             ) : error ? (
@@ -46,7 +55,10 @@ const PaginaInicio = () => {
             ) : (
                 <GrillaPersonajes characters={data ?? []} />
             )}
-            <Paginacion />
+            <Paginacion
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 }

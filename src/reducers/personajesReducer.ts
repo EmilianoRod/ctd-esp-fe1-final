@@ -19,6 +19,7 @@ interface CharactersState {
     loading: boolean;
     error: string | null;
     favorites: number[];
+    filtro: string;
 }
 
 const initialState: CharactersState = {
@@ -27,6 +28,7 @@ const initialState: CharactersState = {
     loading: false,
     error: null,
     favorites: [],
+    filtro: '',
 };
 
 // Reducer
@@ -68,11 +70,32 @@ const charactersReducer = createReducer(initialState, (builder) => {
                 ) ?? null;
             }
         })
-        .addCase(filterCharacters, (state, action) => {
-            // Aplicar el filtro de personajes sobre los datos originales
-            const filtro = action.payload.toLowerCase();
-            state.data = state.originalData?.filter(personaje => personaje.name.toLowerCase().includes(filtro)) ?? null;
+                .addCase(filterCharacters, (state, action) => {
+            // Si el filtro es vacío, restaurar los datos originales
+            if (action.payload === '') {
+                state.filtro = ''; // Restablecer el filtro
+                state.data = state.originalData;
+            } else {
+                // Aplicar el filtro de personajes sobre los datos originales
+                const filtro = action.payload.toLowerCase();
+                state.filtro = action.payload.toLowerCase();
+                state.data = state.originalData?.filter(personaje => personaje.name.toLowerCase().includes(filtro)) ?? null;
+            }
         });
+        // .addCase(filterCharacters, (state, action) => {
+        //     // Aplicar el filtro de personajes
+        //     const filtro = action.payload.toLowerCase();
+        //     state.filtro = filtro; // Actualizar el filtro
+        //     if (filtro === '') {
+        //         // Si el filtro está vacío, mostrar los datos originales
+        //         state.data = state.originalData;
+        //     } else {
+        //         // Filtrar los datos originales según el filtro
+        //         state.data = state.originalData?.filter(personaje =>
+        //             personaje.name.toLowerCase().includes(filtro)
+        //         ) ?? null;
+        //     }
+        // });
 
 });
 

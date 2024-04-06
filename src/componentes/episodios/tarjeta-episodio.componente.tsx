@@ -1,5 +1,5 @@
+import React from 'react';
 import './tarjeta-episodio.css';
-
 /**
  * Tarjeta para cada episodio dentro de la vista de personaje.
  * 
@@ -8,6 +8,9 @@ import './tarjeta-episodio.css';
  * 
  * @returns un JSX element 
  */
+
+
+
 const TarjetaEpisodio = () => {
 
     return <div className="tarjeta-episodio">

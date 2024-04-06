@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 import './encabezado.css';
-
+import React from "react";
 /**
  * Encabezado que contiene los links para navegar entre las páginas
  *

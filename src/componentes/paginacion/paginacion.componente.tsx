@@ -1,4 +1,5 @@
 import './paginacion.css';
+import React from 'react';
 
 /**
  * Componente que contiene los botones para paginar

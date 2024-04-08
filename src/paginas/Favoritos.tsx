@@ -1,8 +1,7 @@
 import React from 'react';
 import GrillaPersonajes from "../componentes/personajes/grilla-personajes.componente";
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TOGGLE_FAVORITE } from '../acciones/personajes';
+import { CLEAR_FAVORITES } from '../acciones/personajes';
 import { RootState } from '../store/store';
 
 
@@ -25,16 +24,25 @@ const PaginaFavoritos = () => {
         favorites: state.characters.favorites,
     }));
 
-    // useEffect(() => {
-    //     // Aquí puedes despachar la acción para cargar personajes marcados como favoritos
-    //     // Por ejemplo, dispatch(fetchFavoriteCharacters());
-    // }, [dispatch]);
+
+    /**
+ * Maneja la eliminación de todos los personajes marcados como favoritos
+ * Despacha la acción CLEAR_FAVORITES para limpiar la lista de favoritos en el estado de reduxx
+ * 
+ * @returns {void}
+ */
+    const handleClearFavorites = () : void => {
+        dispatch(CLEAR_FAVORITES());        
+    };
+
+
+
 
     return (
         <div className="container">
             <div className="actions">
                 <h3>Personajes Favoritos</h3>
-                <button className="danger">Test Button</button>
+                <button className="danger" onClick={handleClearFavorites}>Eliminar Todos</button>
             </div>
             {loading ? (
                 <p>Cargando...</p>
@@ -42,7 +50,7 @@ const PaginaFavoritos = () => {
                 <p>Error: {error}</p>
             ) : (
                 <GrillaPersonajes
-                characters={data ? data.filter(character => character.id !== undefined && favorites.includes(character.id)) : []}
+                characters={data ? data.filter(character => favorites.includes(character.id)) : []}
                 />
             )}
         </div>

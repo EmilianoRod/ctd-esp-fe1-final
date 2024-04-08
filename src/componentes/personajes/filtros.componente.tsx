@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './filtros.css';
 import { useDispatch, useSelector} from 'react-redux';
 import { filterCharacters } from '../../reducers/personajesReducer';
@@ -26,7 +26,6 @@ const Filtros = ({ onFilter }: { onFilter: (filtro: string) => void }) => {
     // Función para manejar el click en el botón Limpiar filtros
     const handleLimpiarFiltros = () => {
         // setFiltro('');
-        // Disparar la acción de filtro con texto vacío para restaurar el estado inicial
         dispatch(filterCharacters(''));
     };
 

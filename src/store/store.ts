@@ -1,12 +1,12 @@
 import { configureStore, combineReducers} from "@reduxjs/toolkit";
 import charactersReducer from "../reducers/personajesReducer";
-import favoritosReducer from "../reducers/favoritosReducer";
+// import favoritosReducer from "../reducers/favoritosReducer";
 
 
 
 const rootReducer = combineReducers({
     characters: charactersReducer,
-    favoritos: favoritosReducer, 
+    // favoritos: favoritosReducer, 
 
 });
 

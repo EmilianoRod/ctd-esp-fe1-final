@@ -14,7 +14,7 @@ interface propsBoton{
     onClick: () => void;
 }
 
-const BotonFavorito  =  ({esFavorito, onClick} : propsBoton)  => {
+const BotonFavorito  = ({esFavorito, onClick} : propsBoton)  => {
     const src = esFavorito ? "/imagenes/star-filled.png" : "/imagenes/star.png"
 
     return( 

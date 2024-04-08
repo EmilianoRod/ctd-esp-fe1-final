@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import BotonFavorito from "../componentes/botones/boton-favorito.componente";
 import TarjetaEpisodio from "../componentes/episodios/tarjeta-episodio.componente";
+import { CAMBIAR_FAVORITO } from "../acciones/personajes";
 import React from "react";
+import { Personaje } from '../componentes/personajes/tarjeta-personaje.componente';
+
 
 
 /**
@@ -19,40 +22,62 @@ import React from "react";
  * @returns la pagina de detalle
  */
 
-const PaginaDetalle = () => {
+interface Character {
+    id: number;
+    name: string;
+    image: string;
+    origin: {
+        name: string;
+    };
+    gender: string;
+    episode: string[];
+}
+
+
+const PaginaDetalle = ({ character   } : {character : Character}) => {
     const dispatch = useDispatch();
-    const { isFavourite } = useSelector((state: RootState) => ({
-        isFavourite: state.characters.favorites.includes(1), // Aquí deberías obtener el id del personaje actualmente mostrado en detalle
+    
+
+    const { data, loading, error, isFavourite } = useSelector((state: RootState) => ({
+        data: state.characters.data,
+        loading: state.characters.loading,
+        error: state.characters.error,
+        isFavourite: state.characters.favorites.includes(1)
     }));
 
+    /**
+     * Maneja el cambio de estado del personaje favorito.
+     * Despacha la acción CAMBIAR_FAVORITO para cambiar el estado del personaje favorito.
+     * 
+     * @returns {void}
+     */
     const handleToggleFavorite = () => {
-        // Aquí deberías despachar la acción para marcar/desmarcar como favorito al personaje actual
-        // Por ejemplo: dispatch(TOGGLE_FAVORITE(1)); // Donde 1 es el id del personaje actualmente mostrado en detalle
+        dispatch(CAMBIAR_FAVORITO({ id: character.id, name: character.name, image: character.image, isFavourite }));
     };
 
     return (
         <div className="container">
-            <h3>Rick Sanchez</h3>
+            <h3>{character.name}</h3>
             <div className={"detalle"}>
                 <div className={"detalle-header"}>
-                    <img src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt="Rick Sanchez" />
+                    <img src={character.image} alt={character.name} />
                     <div className={"detalle-header-texto"}>
-                        <p>Rick Sanchez</p>
-                        <p>Planeta: Earth</p>
-                        <p>Genero: Male</p>
+                        <p>{character.name}</p>
+                        <p>Planeta: {character.origin.name}</p>
+                        <p>Genero: {character.gender}</p>
                     </div>
                     <BotonFavorito esFavorito={isFavourite} onClick={handleToggleFavorite} />
                 </div>
             </div>
             <h4>Lista de episodios donde apareció el personaje</h4>
             <div className={"episodios-grilla"}>
-                <TarjetaEpisodio />
-                <TarjetaEpisodio />
-                <TarjetaEpisodio />
+                {character.episode.map((episode, index) => (
+                    <TarjetaEpisodio key={index}  />
+                ))}
             </div>
         </div>
     );
 }
 
 
-export default PaginaDetalle
+export default PaginaDetalle;

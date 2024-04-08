@@ -1,6 +1,6 @@
 import { Personaje } from "../componentes/personajes/tarjeta-personaje.componente";
-import { createReducer, createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchCharacter, TOGGLE_FAVORITE } from "../acciones/personajes";
+import { createReducer, createAction } from "@reduxjs/toolkit";
+import { fetchCharacter, CAMBIAR_FAVORITO, CLEAR_FAVORITES } from "../acciones/personajes";
 
 // Acción para agregar favorito
 export const addFavorite = createAction<number>("ADD_FAVORITE");
@@ -9,6 +9,7 @@ export const addFavorite = createAction<number>("ADD_FAVORITE");
 export const removeFavorite = createAction<number>("REMOVE_FAVORITE");
 
 export const filterCharacters = createAction<string>("FILTER_CHARACTERS");
+
 
 
 
@@ -24,7 +25,7 @@ interface CharactersState {
 
 const initialState: CharactersState = {
     data: null,
-    originalData: null, 
+    originalData: null,
     loading: false,
     error: null,
     favorites: [],
@@ -42,18 +43,22 @@ const charactersReducer = createReducer(initialState, (builder) => {
             state.loading = false;
             if (Array.isArray(action.payload)) {
                 state.data = action.payload as Personaje[];
-                // Mantén una copia de los datos originales sin filtrar
+
+                state.data = action.payload.map(personaje => ({
+                    ...personaje,
+                    isFavourite: state.favorites.includes(personaje.id)
+                })) as Personaje[];
+
+                // Copia de los datos originales sin filtrar
                 state.originalData = action.payload as Personaje[];
-            } else {
-                // Manejar el caso en el que action.payload no es un array de Personaje
+
             }
         })
-
         .addCase(fetchCharacter.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.error.message ?? "An error occurred";
+            state.error = action.error.message ?? "Errorrr";
         })
-        .addCase(TOGGLE_FAVORITE, (state, action) => {
+        .addCase(CAMBIAR_FAVORITO, (state, action) => {
             const id = action.payload.id; // Ahora action.payload debería ser el id del personaje
             const index = state.favorites.indexOf(id);
             if (index !== -1) {
@@ -70,7 +75,7 @@ const charactersReducer = createReducer(initialState, (builder) => {
                 ) ?? null;
             }
         })
-                .addCase(filterCharacters, (state, action) => {
+        .addCase(filterCharacters, (state, action) => {
             // Si el filtro es vacío, restaurar los datos originales
             if (action.payload === '') {
                 state.filtro = ''; // Restablecer el filtro
@@ -81,22 +86,15 @@ const charactersReducer = createReducer(initialState, (builder) => {
                 state.filtro = action.payload.toLowerCase();
                 state.data = state.originalData?.filter(personaje => personaje.name.toLowerCase().includes(filtro)) ?? null;
             }
-        });
-        // .addCase(filterCharacters, (state, action) => {
-        //     // Aplicar el filtro de personajes
-        //     const filtro = action.payload.toLowerCase();
-        //     state.filtro = filtro; // Actualizar el filtro
-        //     if (filtro === '') {
-        //         // Si el filtro está vacío, mostrar los datos originales
-        //         state.data = state.originalData;
-        //     } else {
-        //         // Filtrar los datos originales según el filtro
-        //         state.data = state.originalData?.filter(personaje =>
-        //             personaje.name.toLowerCase().includes(filtro)
-        //         ) ?? null;
-        //     }
-        // });
+        })
+        .addCase(CLEAR_FAVORITES, (state, action) => {
+            console.log("CLEAR_FAVORITES action captured");
+            // Limpiar todos los personajes favoritos utilizando el método filter
+            // state.personajes = state.personajes.filter(() => false)
 
+            state.favorites = [];
+            console.log("Favorites cleared:", state.favorites);
+        });
 });
 
 

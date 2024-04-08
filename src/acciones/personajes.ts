@@ -1,17 +1,26 @@
 import { Personaje } from "../componentes/personajes/tarjeta-personaje.componente";
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import { RootState } from "../store/store"; 
+import { RootState } from "../store/store";
 
 
-// Definir el tipo de la acción asíncrona
+// Defino el tipo de la acción asíncrona
 type FetchCharacterPayload = {
     results: Personaje[];
 };
 
+/**
+ * Función asincrónica para traer los personajes desede la API
+ *
+ * @async
+ * @function fetchCharacter
+ * @param {number} page - El número de página de los personajes que se van a traer
+ * @param {function} getState - Función para obtener el estado actual de Redux
+ * @returns {Promise<FetchCharacterPayload>} Una promesa que cuando se reuelve se traen los personajes 
+ */
 
 export const fetchCharacter = createAsyncThunk<FetchCharacterPayload, number>(
     "characters/fetchCharacters",
-    async (page : number, {getState}) => {
+    async (page: number, { getState }) => {
         const state = getState() as RootState;
         const filtro = state.characters.filtro;
         const response = await fetch(`https://rickandmortyapi.com/api/character?page=${page}&name=${filtro}`);
@@ -21,30 +30,16 @@ export const fetchCharacter = createAsyncThunk<FetchCharacterPayload, number>(
 );
 
 
-export const TOGGLE_FAVORITE = createAction<Personaje>("TOGGLE_FAVORITE");
-export const ADD_FAVORITE = "ADD_FAVORITE";
-export const REMOVE_FAVORITE = "REMOVE_FAVORITE";
+/**
+ * Acción para alternar el estado de favorito de un personaje
+ * @type {ActionCreatorWithPayload<Personaje, string>}
+ */
+export const CAMBIAR_FAVORITO = createAction<Personaje>("CAMBIAR_FAVORITO");
 
-interface AddFavoriteAction {
-    type: typeof ADD_FAVORITE;
-    payload: Personaje;
-}
 
-interface RemoveFavoriteAction {
-    type: typeof REMOVE_FAVORITE;
-    payload: number;
-}
+/**
+ * Acción para limpiar todos los personajes de la lista de favoritos.
+ * @type {ActionCreatorWithoutPayload<string>}
+ */
+export const CLEAR_FAVORITES = createAction("CLEAR_FAVORITES");
 
-export type CharacterAction =
-    | AddFavoriteAction
-    | RemoveFavoriteAction;
-
-    export const addFavorite = (character: Personaje) => ({
-        type: ADD_FAVORITE,
-        payload: character
-    });
-
-export const removeFavorite = (id: number) => ({
-    type: REMOVE_FAVORITE,
-    payload: id,
-});

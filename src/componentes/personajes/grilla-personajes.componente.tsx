@@ -3,6 +3,7 @@ import './grilla-personajes.css';
 import TarjetaPersonaje from './tarjeta-personaje.componente';
 import { Personaje } from './tarjeta-personaje.componente';
 
+
 /**
  * Grilla de personajes para la pagina de inicio
  * 
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const GrillaPersonajes = ({ characters } : Props) => {
+
+
     return (
         <div className="grilla-personajes">
             {characters.map(character => (
@@ -26,6 +29,7 @@ const GrillaPersonajes = ({ characters } : Props) => {
                     name={character.name}
                     image={character.image}
                     isFavourite={character.isFavourite}
+                    
                 />
             ))}
         </div>

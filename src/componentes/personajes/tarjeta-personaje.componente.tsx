@@ -2,7 +2,7 @@ import React from 'react';
 import BotonFavorito from '../botones/boton-favorito.componente';
 import './tarjeta-personaje.css';
 import { useDispatch } from 'react-redux';
-import { TOGGLE_FAVORITE } from '../../acciones/personajes';
+import { CAMBIAR_FAVORITO } from '../../acciones/personajes';
 
 /**
  * Tarjeta para cada personaje dentro de la grilla de personajes. 
@@ -25,7 +25,7 @@ const TarjetaPersonaje = ({ id, image, name, isFavourite}: Personaje) => {
 
     const dispatch = useDispatch();
     const handleToggleFavorite = () => {
-        dispatch(TOGGLE_FAVORITE({ id, name, image, isFavourite}));
+        dispatch(CAMBIAR_FAVORITO({ id, name, image, isFavourite}));
     };
 
 

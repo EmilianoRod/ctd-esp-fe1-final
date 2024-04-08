@@ -19,7 +19,7 @@ import { AppDispatch, RootState } from '../store/store';
 
 const PaginaInicio = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { data, loading, error } = useSelector((state: RootState) => state.characters);
+    const { data, loading, error} = useSelector((state: RootState) => state.characters);
 
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -28,11 +28,24 @@ const PaginaInicio = () => {
         dispatch( fetchCharacter(currentPage) );
     }, [dispatch, currentPage]);
 
+    useEffect(() => {
+        // Almacena los datos originales cuando el componente se monta
+        if (!data && !loading && !error) {
+            dispatch(fetchCharacter(currentPage)); // Fetch para obtener los datos originales
+        }
+    }, [dispatch]);
+
     const handleFilter = (filtro: string) => {
-        // Aquí puedes implementar la lógica para filtrar los personajes en función del texto ingresado
-        // Por ejemplo, podrías llamar a una acción de Redux que aplique el filtro
     };
 
+
+
+/**
+ * Maneja el cambio de página y actualiza el estado de la página actual
+ * 
+ * @param {number} page - El número de página al que se debe cambiar
+ * @returns {void}
+ */
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
@@ -53,7 +66,7 @@ const PaginaInicio = () => {
             ) : error ? (
                 <p>Error: {error}</p>
             ) : (
-                <GrillaPersonajes characters={data ?? []} />
+                <GrillaPersonajes characters={ data ?? []} />
             )}
             <Paginacion
                 currentPage={currentPage}
